@@ -1,6 +1,9 @@
 <template>
     <div class="hello">
         <h1>{{ msg }}</h1>
+        <p v-for="event in events" class="event" :key="event.timestamp">
+            {{ event.message }}
+        </p>
         <p>
             For guide and recipes on how to configure / customize this project,<br>
             check out the
@@ -33,14 +36,29 @@
 <script>
     export default {
         name: 'HelloWorld',
+        data() {
+            return {
+                events: []
+            };
+        },
         props: {
             msg: String
+        },
+        created() {
+            this.$eventBus.$on('app:event', (message) => {
+                this.events.push({ message, timestamp: Date.now() });
+            });
         }
     };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .event {
+        background-color: tomato;
+        font-weight: bold;
+    }
+
     h3 {
         margin: 40px 0 0;
     }
